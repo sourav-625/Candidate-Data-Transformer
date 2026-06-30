@@ -1,5 +1,5 @@
 import argparse
-
+import json
 from src.pipeline import Pipeline
 
 
@@ -46,6 +46,9 @@ def main():
 
     print(f"Output written to {args.output}")
 
+    with open(args.output, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        print(json.dumps(data, indent=4))
 
 if __name__ == "__main__":
     main()

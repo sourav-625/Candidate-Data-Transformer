@@ -7,97 +7,16 @@
     "phones": [
         "+919876543210"
     ],
-    "location": {
-        "city": "Bangalore",
-        "country": null,
-        "state": null
-    },
     "skills": [
         "Python",
         "SQL",
         "Machine Learning",
         "GitHub"
     ],
-    "experience": [
-        {
-            "company": "Google",
-            "role": null,
-            "start_date": null,
-            "end_date": null
-        }
-    ],
     "links": {
-        "linkedin": "https://linkedin.com/in/johnsmith",
         "portfolio": null,
-        "github": "https://github.com/johnsmith"
+        "github": "https://github.com/johnsmith",
+        "linkedin": "https://linkedin.com/in/johnsmith"
     },
-    "overall_confidence": 0.68,
-    "provenance": {
-        "candidate_id": {
-            "sources": [
-                "csv"
-            ],
-            "strategy": "prefer_primary"
-        },
-        "full_name": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "agreement"
-        },
-        "headline": {
-            "sources": [],
-            "strategy": "prefer_primary"
-        },
-        "years_experience": {
-            "sources": [],
-            "strategy": "null_on_conflict"
-        },
-        "emails": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "union"
-        },
-        "phones": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "union"
-        },
-        "skills": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "union"
-        },
-        "location": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "null_on_conflict"
-        },
-        "links": {
-            "sources": [
-                "csv",
-                "notes"
-            ],
-            "strategy": "null_on_conflict"
-        },
-        "experience": {
-            "sources": [
-                "notes"
-            ],
-            "strategy": "union"
-        },
-        "education": {
-            "sources": [],
-            "strategy": "union"
-        }
-    }
+    "overall_confidence": 0.68
 }
