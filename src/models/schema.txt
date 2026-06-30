@@ -1,0 +1,42 @@
+Candidate (
+
+    candidate_id
+
+    full_name
+
+    emails []
+
+    phones []
+
+    location {}
+
+        country
+
+        state
+
+        city
+
+    links {}
+
+        github
+
+        linkedin
+
+        portfolio
+
+    headline
+
+    years_experience
+
+    skills []
+
+    experience []
+
+    education []
+
+    provenance {}
+
+    overall_confidence
+
+    warnings []
+)
