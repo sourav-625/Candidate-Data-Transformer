@@ -10,32 +10,47 @@ It utilizes deterministic rule-based matching alongside Natural Language Process
 
 ## 🛠️ System Architecture & Data Flow
 
-The pipeline processes data through three distinct layers: **Ingestion & Parsing**, **Normalization**, and **Merging & Resolution**.
+The pipeline processes data through three distinct layers: **Ingestion & Parsing**, **Data Extraction**, **Normalization**, and **Merging & Resolution** after which it **Projects** the data according to required "configurations".
 
 ```
 
                        [ CSV Data ]          [ Recruiter Notes ]
                             │                        │
                             ▼                        ▼
-                     ┌──────────────┐        ┌──────────────┐
+                     ┌──────────────┐        ┌───────────────┐
                      │ csv_parser.py│        │notes_parser.py│
-                     └──────┬───────┘        └───────┬──────┘
+                     └──────┬───────┘        └───────┬───────┘
                             │                        │
                             └───────────┬────────────┘
                                         ▼
                                [ Candidate Objects ]
                                         │
                                         ▼
+                            ┌──────────────────────────┐
+                            │   conflict_resolver.py   │
+                            └────────────┬─────────────┘
+                                         │
+                                         ▼
                                  ┌──────────────┐
                                  │  merger.py   │
                                  └──────┬───────┘
                                         │
                                         ▼
-                           ┌──────────────────────────┐
-                           │   conflict_resolver.py   │
-                           └────────────┬─────────────┘
+                              ┌──────────────────┐
+                              │   Validator.py   │
+                              └──────────────────┘
+                                        │
                                         ▼
                                [ Canonical Output ]
+                                        |
+                                        |
+                                        ▼
+                                ┌──────────────────┐
+                                │   Projector.py   │
+                                └──────────────────┘
+                                        │
+                                        ▼
+                                  [Final Output]
 
                                
 ```
@@ -133,7 +148,7 @@ Key design characteristics:
 Clone the repository and navigate to the project root:
 
 ```bash
-git clone <repository-url>
+git clone "https://github.com/sourav-625/Candidate-Data-Transformer.git"
 cd candidate-data-transformer
 ```
 
