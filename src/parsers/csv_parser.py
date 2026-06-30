@@ -5,8 +5,8 @@ from typing import List, Dict, Any
 from src.models.candidate import Candidate
 
 
-class CSVAdapter:
-    def __init__(self, csv_path: str, mapping_path: str):
+class CSVParser:
+    def __init__(self, csv_path: str, mapping_path: str = "src/resources/field_mapping.json"):
         self.csv_path = csv_path
         self.mapping_path = mapping_path
         self.field_mapping = self.load_field_mapping()
@@ -49,6 +49,9 @@ class CSVAdapter:
             # ----------------------------
             if field == "full_name":
                 candidate.full_name = value.strip()
+            
+            elif field == "candidate_id":
+                candidate.candidate_id = value.strip()
 
             elif field == "emails":
                 candidate.emails.append(value.strip())
@@ -103,4 +106,4 @@ class CSVAdapter:
                 candidate = self.map_record(row)
                 candidates.append(candidate)
 
-        return candidates
+        return candidates[0]

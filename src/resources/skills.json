@@ -1,0 +1,15 @@
+{
+    "Python": [
+        "python",
+        "python3"
+    ],
+    "SQL": [
+        "sql",
+        "mysql",
+        "postgresql"
+    ],
+    "Machine Learning": [
+        "machine learning",
+        "ml"
+    ]
+}

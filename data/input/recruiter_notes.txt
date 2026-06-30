@@ -1,0 +1,17 @@
+Candidate Name: John Smith
+
+Strong Python developer with SQL and Machine Learning experience.
+
+Worked at Google.
+
+Email: john.smith@gmail.com
+
+Phone: +91-98765-43210
+
+GitHub:
+https://github.com/johnsmith
+
+LinkedIn:
+https://linkedin.com/in/johnsmith
+
+Currently based in Bangalore.

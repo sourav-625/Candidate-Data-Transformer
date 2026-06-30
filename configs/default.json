@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "candidate_id": "candidate_id",
+        "full_name": "full_name",
+        "emails": "emails",
+        "phones": "phones",
+        "location": "location",
+        "skills": "skills",
+        "experience": "experience",
+        "links": "links"
+    },
+    "include_confidence": true,
+    "include_provenance": true,
+    "missing": "null"
+}
