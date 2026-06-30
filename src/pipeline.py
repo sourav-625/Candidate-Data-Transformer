@@ -34,7 +34,6 @@ class Pipeline:
         self,
         csv_path: str,
         notes_path: str,
-        skills_path: str,
         config_path: str,
         output_path: str,
     ):
@@ -50,7 +49,6 @@ class Pipeline:
 
         notes_candidate = NotesParser(
             notes_path,
-            skills_path,
         ).parse()
 
         # --------------------------------------------------

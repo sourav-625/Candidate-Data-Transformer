@@ -36,15 +36,55 @@ class NotesParser:
         re.IGNORECASE,
     )
 
+    NEGATIVE_WORDS = {
+        "weak", "poor", "bad", "lacking",
+        "limited", "no", "not", "without",
+        "inexperienced"
+    }
+
+    EMPLOYMENT_KEYWORDS = {
+        "worked", "working", "employed", "joined",
+        "intern", "experience", "company", "organization",
+        "at", "with"
+    }
+
+    with open("src/resources/countries.json", "r", encoding="utf-8") as f:
+        country_state_data = json.load(f)
+    
+    COUNTRY_SET = {
+        country.strip().lower()
+        for country in country_state_data.keys()
+    }
+
+    STATE_SET = {
+        state.strip().lower()
+        for states in country_state_data.values()
+        for state in states
+    }
+
+    KNOWN_COMPANIES = {
+        "google",
+        "microsoft",
+        "amazon",
+        "meta",
+        "apple",
+        "infosys",
+        "tcs",
+        "wipro",
+    }
+
     def __init__(
         self,
         notes_path: str,
-        skills_path: str,
+        skills_path: str = "src/resources/skills.json",
+        jobs_path: str = "src/resources/jobs.json",
     ):
         self.notes_path = notes_path
         self.skills_path = skills_path
+        self.jobs_path = jobs_path
 
         self.skill_dictionary = self.load_skill_dictionary()
+        self.jobs_dictionary = self.load_job_dictionary()
 
         # alias -> canonical skill
         self.skill_lookup = {}
@@ -53,6 +93,13 @@ class NotesParser:
 
             for alias in aliases:
                 self.skill_lookup[alias.lower()] = canonical
+        
+        self.job_lookup = {}
+        for canonical, aliases in self.jobs_dictionary.items():
+            self.job_lookup[canonical.lower()] = canonical
+
+            for alias in aliases:
+                self.job_lookup[alias.lower()] = canonical
 
         self.nlp = spacy.load("en_core_web_sm")
 
@@ -67,6 +114,10 @@ class NotesParser:
     def load_skill_dictionary(self) -> Dict[str, List[str]]:
         with open(self.skills_path, "r", encoding="utf-8") as f:
             return json.load(f)
+        
+    def load_job_dictionary(self) -> Dict[str, List[str]]:
+        with open(self.jobs_path, "r", encoding="utf-8") as f:
+            return json.load(f)
 
     # =====================================================
     # Main Parser
@@ -80,22 +131,60 @@ class NotesParser:
         candidate = Candidate()
 
         candidate.emails = self.extract_emails(text)
-        candidate.phones = self.extract_phones(text)
-        candidate.skills = self.extract_skills(text)
+        candidate.phones = self.extract_phones(candidate, text)
+        candidate.skills = self.extract_skills(doc)
 
         candidate.links = self.extract_links(text)
 
-        entities = self.extract_entities(doc)
+        candidate.full_name = self.extract_name(doc)
+        candidate.location = self.extract_location(doc)
 
-        candidate.full_name = entities["name"]
-        candidate.location = entities["location"]
+        companies = self.extract_companies(doc)
+        roles = self.extract_job(doc)
 
-        if entities["companies"]:
+        if companies:
             exp = Experience()
-            exp.company = entities["companies"][0]
+            exp.company = companies[0]
+            exp.role = roles[0] if roles else None
             candidate.experience.append(exp)
 
         return candidate
+
+    # =====================================================
+    # General Normalization
+    # =====================================================
+
+    def normalize_value(self, value):
+
+        if value is None:
+            return None
+
+        value = str(value).strip()
+
+        if value.lower() in {
+            "",
+            "na",
+            "n/a",
+            "none",
+            "null",
+            "-"
+        }:
+            return None
+
+        return value
+
+    # =====================================================
+    # Name
+    # =====================================================
+
+    def extract_name(self, doc):
+
+        for ent in doc.ents:
+
+            if ent.label_ == "PERSON":
+                return ent.text.strip()
+
+        return None
 
     # =====================================================
     # Email
@@ -114,13 +203,32 @@ class NotesParser:
     # Phone
     # =====================================================
 
-    def normalize_phone(self, phone: str) -> str:
+    def normalize_phone(self, phone: str):
 
-        digits = re.sub(r"[^\d+]", "", phone)
+        phone = self.normalize_value(phone)
 
-        return digits
+        if not phone:
+            return None
 
-    def extract_phones(self, text: str) -> List[str]:
+        # Keep only digits and +
+        phone = re.sub(r"[^\d+]", "", phone)
+
+        # If + appears somewhere other than the beginning,
+        # remove all and prepend one later if needed.
+        if phone.count("+") > 1 or ("+" in phone and not phone.startswith("+")):
+            phone = "+" + re.sub(r"\+", "", phone)
+
+        # Indian local numbers
+        if re.fullmatch(r"\d{10}", phone):
+            phone = "+91" + phone
+
+        # Validate E.164-ish
+        if re.fullmatch(r"\+\d{10,15}", phone):
+            return phone
+
+        return None
+
+    def extract_phones(self, candidate: Candidate, text: str) -> List[str]:
 
         phones = set()
 
@@ -128,7 +236,7 @@ class NotesParser:
 
             normalized = self.normalize_phone(phone)
 
-            if normalized:
+            if normalized and normalized not in candidate.phones:
                 phones.add(normalized)
 
         return sorted(phones)
@@ -137,18 +245,24 @@ class NotesParser:
     # Skills
     # =====================================================
 
-    def extract_skills(self, text: str) -> List[str]:
-
-        text_lower = text.lower()
+    def extract_skills(self, doc):
 
         found = set()
 
-        for alias, canonical in self.skill_lookup.items():
+        for sent in doc.sents:
 
-            pattern = r"\b" + re.escape(alias) + r"\b"
+            clauses = re.split(r"\bbut\b|\bhowever\b|\byet\b|\balthough\b", sent.text, flags=re.I)
 
-            if re.search(pattern, text_lower):
-                found.add(canonical)
+            for clause in clauses:
+
+                clause_lower = clause.lower()
+
+                for alias, canonical in self.skill_lookup.items():
+
+                    if re.search(r"\b" + re.escape(alias) + r"\b", clause_lower):
+
+                        if not any(neg in clause_lower for neg in self.NEGATIVE_WORDS):
+                            found.add(canonical)
 
         return sorted(found)
 
@@ -193,18 +307,48 @@ class NotesParser:
 
         return links
 
+
     # =====================================================
-    # Named Entity Recognition
+    # Extract Companies
     # =====================================================
 
-    def extract_entities(
-        self,
-        doc,
-    ) -> Dict:
-
-        name = None
+    def extract_companies(self, doc):
 
         companies = []
+        seen = set()
+
+        text_lower = doc.text.lower()
+
+        for company in self.KNOWN_COMPANIES:
+            if company in text_lower:
+                companies.append(company.title())
+                seen.add(company)
+
+        for ent in doc.ents:
+
+            if ent.label_ != "ORG":
+                continue
+
+            company = ent.text.strip()
+            low = company.lower()
+
+            # skip if already found
+            if low in seen:
+                continue
+
+            if low in self.skill_lookup:
+                continue
+
+            companies.append(company)
+            seen.add(low)
+
+        return companies
+
+    # =====================================================
+    # Extract location
+    # =====================================================
+
+    def extract_location(self, doc):
 
         location = {
             "city": None,
@@ -212,30 +356,46 @@ class NotesParser:
             "country": None,
         }
 
-        seen_companies = set()
-
         for ent in doc.ents:
 
-            if ent.label_ == "PERSON":
+            if ent.label_ not in ("GPE", "LOC"):
+                continue
 
-                if name is None:
-                    name = ent.text.strip()
+            val = ent.text.strip()
 
-            elif ent.label_ == "ORG":
+            low = val.lower()
 
-                company = ent.text.strip()
+            if low in self.COUNTRY_SET:
+                if location["country"] is None:
+                    location["country"] = val
 
-                if company.lower() not in seen_companies:
-                    companies.append(company)
-                    seen_companies.add(company.lower())
+            elif low in self.STATE_SET:
+                if location["state"] is None:
+                    location["state"] = val
 
-            elif ent.label_ in ("GPE", "LOC"):
-
+            else:
                 if location["city"] is None:
-                    location["city"] = ent.text.strip()
+                    location["city"] = val
 
-        return {
-            "name": name,
-            "companies": companies,
-            "location": location,
-        }
+        return location
+    
+    # =====================================================
+    # Extract Job
+    # =====================================================
+
+    def extract_job(self, doc):
+
+        roles = []
+        seen = set()
+
+        text_lower = doc.text.lower()
+
+        for alias, canonical in self.job_lookup.items():
+
+            if alias in text_lower:
+
+                if canonical.lower() not in seen:
+                    roles.append(canonical)
+                    seen.add(canonical.lower())
+
+        return roles

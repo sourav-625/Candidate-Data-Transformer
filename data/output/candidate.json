@@ -9,25 +9,26 @@
     ],
     "location": {
         "city": "Bangalore",
-        "state": null,
-        "country": null
+        "country": null,
+        "state": null
     },
     "skills": [
         "Python",
         "SQL",
-        "Machine Learning"
+        "Machine Learning",
+        "GitHub"
     ],
     "experience": [
         {
-            "company": "SQL",
+            "company": "Google",
             "role": null,
             "start_date": null,
             "end_date": null
         }
     ],
     "links": {
-        "portfolio": null,
         "linkedin": "https://linkedin.com/in/johnsmith",
+        "portfolio": null,
         "github": "https://github.com/johnsmith"
     },
     "overall_confidence": 0.68,

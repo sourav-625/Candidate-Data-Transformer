@@ -1,15 +1,81 @@
 {
     "Python": [
         "python",
-        "python3"
+        "python3",
+        "python 3",
+        "py",
+        "python programming"
     ],
+
+    "Java": [
+        "java",
+        "core java",
+        "java programming"
+    ],
+
+    "C++": [
+        "c++",
+        "cpp",
+        "c plus plus"
+    ],
+
     "SQL": [
         "sql",
         "mysql",
-        "postgresql"
+        "postgresql",
+        "postgres",
+        "sqlite",
+        "mssql",
+        "sql server"
     ],
+
     "Machine Learning": [
         "machine learning",
-        "ml"
+        "ml",
+        "machine-learning"
+    ],
+
+    "Deep Learning": [
+        "deep learning",
+        "dl",
+        "neural networks",
+        "neural network"
+    ],
+
+    "Data Analysis": [
+        "data analysis",
+        "data analytics",
+        "analytics"
+    ],
+
+    "Pandas": [
+        "pandas"
+    ],
+
+    "NumPy": [
+        "numpy"
+    ],
+
+    "TensorFlow": [
+        "tensorflow",
+        "tf"
+    ],
+
+    "PyTorch": [
+        "pytorch",
+        "torch"
+    ],
+
+    "Scikit-learn": [
+        "scikit-learn",
+        "sklearn"
+    ],
+
+    "Git": [
+        "git"
+    ],
+
+    "GitHub": [
+        "github"
     ]
 }

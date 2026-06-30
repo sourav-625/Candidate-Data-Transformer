@@ -1,0 +1,18 @@
+{
+  "Software Developer": [
+    "SDE",
+    "Software Engineer",
+    "Backend Developer",
+    "Frontend Developer"
+  ],
+  "Data Scientist": [
+    "ML Engineer",
+    "Machine Learning Engineer",
+    "AI Engineer"
+  ],
+  "DevOps Engineer": [
+    "DevOps",
+    "Site Reliability Engineer",
+    "SRE"
+  ]
+}

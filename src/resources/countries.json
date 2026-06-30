@@ -1,0 +1,47 @@
+{
+    "india": [
+        "karnataka",
+        "maharashtra",
+        "tamil nadu",
+        "west bengal",
+        "uttar pradesh"
+    ],
+    "united states": [
+        "california",
+        "texas",
+        "new york",
+        "washington"
+    ],
+    "usa": [
+        "california",
+        "texas",
+        "new york",
+        "washington"
+    ],
+    "us": [
+        "california",
+        "texas",
+        "new york",
+        "washington"
+    ],
+    "united kingdom": [
+        "england",
+        "scotland"
+    ],
+    "uk": [
+        "england",
+        "scotland"
+    ],
+    "canada": [
+        "ontario",
+        "british columbia"
+    ],
+    "australia": [
+        "new south wales",
+        "victoria"
+    ],
+    "germany": [
+        "bavaria",
+        "berlin"
+    ]
+}

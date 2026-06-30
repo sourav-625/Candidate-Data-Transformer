@@ -33,12 +33,6 @@ def main():
         help="Output JSON path"
     )
 
-    parser.add_argument(
-        "--skills",
-        default="src/resources/skills.json",
-        help="Skills dictionary"
-    )
-
     args = parser.parse_args()
 
     pipeline = Pipeline()
@@ -46,7 +40,6 @@ def main():
     pipeline.run(
         csv_path=args.csv,
         notes_path=args.notes,
-        skills_path=args.skills,
         config_path=args.config,
         output_path=args.output,
     )
