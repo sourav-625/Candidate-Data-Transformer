@@ -1,0 +1,48 @@
+{
+    "candidate id": "candidate_id",
+    "id": "candidate_id",
+    "candidate_id": "candidate_id",
+
+    "name": "full_name",
+    "full name": "full_name",
+    "candidate name": "full_name",
+    "applicant name": "full_name",
+
+    "email": "emails",
+    "email address": "emails",
+    "mail": "emails",
+    "primary email": "emails",
+
+    "phone": "phones",
+    "phone number": "phones",
+    "mobile": "phones",
+    "mobile number": "phones",
+    "contact number": "phones",
+
+    "headline": "headline",
+    "title": "headline",
+    "designation": "headline",
+
+    "skills": "skills",
+    "skill": "skills",
+    "technical skills": "skills",
+    "tech stack": "skills",
+
+    "years of experience": "years_experience",
+    "experience": "years_experience",
+    "total experience": "years_experience",
+
+    "city": "location.city",
+    "state": "location.state",
+    "country": "location.country",
+    "location": "location.city",
+
+    "github": "links.github",
+    "github profile": "links.github",
+
+    "linkedin": "links.linkedin",
+    "linkedin profile": "links.linkedin",
+
+    "portfolio": "links.portfolio",
+    "website": "links.portfolio"
+}
